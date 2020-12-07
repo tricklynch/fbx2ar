@@ -1,2 +1,6 @@
 env
 *.fbx
+FBX2gltf
+/usdpython
+output/
+uploads/
