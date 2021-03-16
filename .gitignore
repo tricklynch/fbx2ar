@@ -4,3 +4,4 @@ FBX2gltf
 /usdpython
 output/
 uploads/
+.venv

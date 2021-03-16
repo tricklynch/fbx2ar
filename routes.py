@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask, redirect, render_template, url_for, send_from_directory
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
@@ -35,4 +36,4 @@ def sendFile(filename):
     print(filename)
     return send_from_directory("output",filename)
 
-app.run('0.0.0.0', 8080, debug=True)
+app.run('0.0.0.0', 3000, debug=True)
