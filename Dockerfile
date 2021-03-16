@@ -1,15 +1,12 @@
-FROM python:3
+FROM plattar/python-xrutils:latest
 
 USER root
 
 WORKDIR /usr/src/app
 
-COPY --chown=myuser:myuser FBX2gltf ./
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt update -y
+RUN apt install -y python3 python3-pip
 COPY . .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-RUN useradd -ms /bin/bash myuser && chown -R myuser /usr/src/app
-
-USER myuser
-CMD [ "python", "./routes.py" ]
+CMD [ "python3", "./routes.py" ]
