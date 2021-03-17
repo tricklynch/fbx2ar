@@ -1,4 +1,4 @@
-FROM plattar/python-xrutils:latest
+FROM plattar/python-xrutils:release-1.89.6
 
 USER root
 

@@ -5,3 +5,4 @@ FBX2gltf
 output/
 uploads/
 .venv
+.DS_Store
