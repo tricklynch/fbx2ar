@@ -3,12 +3,13 @@ from flask import Flask, redirect, render_template, url_for, send_from_directory
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from subprocess import run
-from werkzeug.utils import secure_filename
 from os import path
-import random
+from random import randint
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = './uploads'
+app.config['UPLOAD_FOLDER'] = 'static'
+# SECRET_KEY is used to prevent CSRF
+# As this is an unauthenticated application, CSRF is not a concern
 app.config['SECRET_KEY'] = '\x00'
 
 class UploadForm(FlaskForm):
@@ -19,21 +20,25 @@ def index():
     form = UploadForm()
 
     if form.validate_on_submit():
-        baseName = "download" + str( random.randint(0,10000))  # secure_filename(form.file.data.filename)
-        form.file.data.save('uploads/' + baseName+".fbx")
+        base_name = 'download' + str(randint(0,10000)) 
+        upload_name = base_name + '.fbx'
+        file_path = path.join(app.config['UPLOAD_FOLDER'], upload_name)
+        form.file.data.save(file_path)
+        fbx_to_gltf(base_name)
 
-#command to run is here
-#./FBX2gltf -b -i uploads/cube.fbx -o output/cube
-        run(["./FBX2gltf","-b","-i",path.join("uploads",baseName + ".fbx"),"-o",path.join("output", baseName)])
-
-        return redirect(url_for('sendFile',filename=baseName+".glb"))
+        return redirect(url_for('sendFile', filename=base_name+'.glb'))
 
     return render_template('template.html', form=form)
 
-
 @app.route('/output/<filename>')
 def sendFile(filename):
-    print(filename)
-    return send_from_directory("output",filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+def fbx_to_gltf(base_name, input_dir=app.config['UPLOAD_FOLDER'], output_dir=app.config['UPLOAD_FOLDER']):
+    # fbx2gltf --input uploads/cube.fbx --output output/cube.glb
+    cmd_name = 'fbx2gltf'
+    input_path = path.join('.', input_dir, base_name+'.fbx')
+    output_path = path.join('.', output_dir, base_name+'.glb')
+    run([cmd_name, '--input', input_path, '--output', output_path])
 
 app.run('0.0.0.0', 3000, debug=True)

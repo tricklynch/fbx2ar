@@ -4,6 +4,7 @@ USER root
 
 WORKDIR /usr/src/app
 
+RUN mkdir static
 RUN apt update -y
 RUN apt install -y python3 python3-pip
 COPY . .
