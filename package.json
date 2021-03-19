@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "attr-accept": "^2.2.2",
+    "svelte-file-dropzone": "^0.0.15"
+  }
+}
