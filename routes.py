@@ -41,22 +41,32 @@ def files_recieved():
                 upload.save(file_path)
 
         if file_to_convert != '':
-            fbx_to_usdz(file_to_convert.split('.')[0], base_name, path.join(app.config['UPLOAD_FOLDER'], base_name))
-            return redirect(url_for('sendFile', filename=base_name + '.usdz'))
-            
+            fbx_to_usdz(file_to_convert.split('.')[0], base_name, path.join(
+                app.config['UPLOAD_FOLDER'], base_name))
+            return redirect(url_for('file_download', filename=base_name + '.usdz'))
+
     return send_from_directory('client/public', 'index.html')
 
+
+@app.route('/download/<filename>')
+def file_download(filename):
+    return render_template('download.html', filename=filename)
+
+
 @ app.route('/output/<path:filename>')
-def sendFile(filename):
+def send_file(filename):
     return send_from_directory(app.config["OUTPUT_FOLDER"], filename)
+
 
 @ app.route("/")
 def index():
     return send_from_directory('client/public', 'index.html')
 
+
 @ app.route("/<path:path>")
 def home(path):
     return send_from_directory('client/public', path)
+
 
 def create_uploads_directory(base_name, input_dir=app.config['UPLOAD_FOLDER'], output_dir=app.config['OUTPUT_FOLDER']):
     cmd_name = 'mkdir'
